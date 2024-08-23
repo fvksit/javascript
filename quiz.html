@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Sederhana</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .answers label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+        .result {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Quiz Sederhana</h1>
+    <div id="quiz">
+        <!-- Pertanyaan dan jawaban akan dihasilkan di sini -->
+    </div>
+    <button onclick="submitQuiz()">Kirim Jawaban</button>
+    <div id="result" class="result"></div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "Apa ibu kota Indonesia?",
+            answers: [
+                { text: "Jakarta", correct: true },
+                { text: "Bandung", correct: false },
+                { text: "Surabaya", correct: false },
+                { text: "Medan", correct: false }
+            ]
+        },
+        {
+            question: "Apa warna langit pada hari cerah?",
+            answers: [
+                { text: "Merah", correct: false },
+                { text: "Hijau", correct: false },
+                { text: "Biru", correct: true },
+                { text: "Kuning", correct: false }
+            ]
+        },
+        {
+            question: "Siapa penulis Harry Potter?",
+            answers: [
+                { text: "J.K. Rowling", correct: true },
+                { text: "J.R.R. Tolkien", correct: false },
+                { text: "George R.R. Martin", correct: false },
+                { text: "C.S. Lewis", correct: false }
+            ]
+        }
+    ];
+
+    function renderQuiz() {
+        const quizContainer = document.getElementById('quiz');
+        quizContainer.innerHTML = '';
+
+        questions.forEach((q, index) => {
+            const questionElement = document.createElement('div');
+            questionElement.classList.add('question');
+
+            const questionText = document.createElement('p');
+            questionText.textContent = `${index + 1}. ${q.question}`;
+            questionElement.appendChild(questionText);
+
+            const answersElement = document.createElement('div');
+            answersElement.classList.add('answers');
+
+            q.answers.forEach((answer, i) => {
+                const answerLabel = document.createElement('label');
+                const answerInput = document.createElement('input');
+                answerInput.type = 'radio';
+                answerInput.name = `q${index}`;
+                answerInput.value = i;
+                answerLabel.appendChild(answerInput);
+                answerLabel.appendChild(document.createTextNode(answer.text));
+                answersElement.appendChild(answerLabel);
+            });
+
+            questionElement.appendChild(answersElement);
+            quizContainer.appendChild(questionElement);
+        });
+    }
+
+    function submitQuiz() {
+        let score = 0;
+
+        questions.forEach((q, index) => {
+            const selectedAnswer = document.querySelector(`input[name="q${index}"]:checked`);
+            if (selectedAnswer) {
+                const answerIndex = parseInt(selectedAnswer.value);
+                if (q.answers[answerIndex].correct) {
+                    score++;
+                }
+            }
+        });
+
+        const resultElement = document.getElementById('result');
+        resultElement.textContent = `Anda mendapat ${score} dari ${questions.length} jawaban benar.`;
+    }
+
+    // Render quiz saat halaman dimuat
+    window.onload = renderQuiz;
+</script>
+
+</body>
+</html>
