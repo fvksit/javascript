@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penghitung Karakter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        .count {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Penghitung Karakter</h1>
+    <textarea id="textInput" placeholder="Masukkan teks di sini..." oninput="countText()"></textarea>
+    <div class="count">Jumlah Karakter: <span id="charCount">0</span></div>
+    <div class="count">Jumlah Kata: <span id="wordCount">0</span></div>
+    <div class="count">Jumlah Kalimat: <span id="sentenceCount">0</span></div>
+</div>
+
+<script>
+    function countText() {
+        let text = document.getElementById('textInput').value;
+
+        // Hitung jumlah karakter
+        let charCount = text.length;
+
+        // Hitung jumlah kata
+        let wordCount = text.trim().split(/\s+/).filter(function(word) {
+            return word.length > 0;
+        }).length;
+
+        // Hitung jumlah kalimat
+        let sentenceCount = text.split(/[.!?]+/).filter(function(sentence) {
+            return sentence.trim().length > 0;
+        }).length;
+
+        // Tampilkan hasil
+        document.getElementById('charCount').textContent = charCount;
+        document.getElementById('wordCount').textContent = wordCount;
+        document.getElementById('sentenceCount').textContent = sentenceCount;
+    }
+</script>
+
+</body>
+</html>
