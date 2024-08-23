@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validasi dengan Database</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Form Validasi dengan Database</h1>
+    <form id="myForm">
+        <div class="form-group">
+            <label for="name">Nama:</label>
+            <input type="text" id="name" name="name" />
+            <div id="nameError" class="error"></div>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" />
+            <div id="emailError" class="error"></div>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" />
+            <div id="passwordError" class="error"></div>
+        </div>
+        <button type="submit">Kirim</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('myForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Cegah pengiriman form default
+
+        let isValid = true;
+
+        // Ambil nilai input
+        let name = document.getElementById('name').value;
+        let email = document.getElementById('email').value;
+        let password = document.getElementById('password').value;
+
+        // Hapus pesan kesalahan sebelumnya
+        document.getElementById('nameError').textContent = '';
+        document.getElementById('emailError').textContent = '';
+        document.getElementById('passwordError').textContent = '';
+
+        // Validasi Nama
+        if (name.trim() === '') {
+            document.getElementById('nameError').textContent = 'Nama harus diisi.';
+            isValid = false;
+        }
+
+        // Validasi Email
+        if (email.trim() === '') {
+            document.getElementById('emailError').textContent = 'Email harus diisi.';
+            isValid = false;
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            document.getElementById('emailError').textContent = 'Email tidak valid.';
+            isValid = false;
+        }
+
+        // Validasi Password
+        if (password.trim() === '') {
+            document.getElementById('passwordError').textContent = 'Password harus diisi.';
+            isValid = false;
+        } else if (password.length < 6) {
+            document.getElementById('passwordError').textContent = 'Password harus minimal 6 karakter.';
+            isValid = false;
+        }
+
+        if (isValid) {
+            // Kirim data ke server untuk validasi lebih lanjut
+            try {
+                let response = await fetch('https://example.com/validate', { // Ganti dengan URL endpoint Anda
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        password: password
+                    })
+                });
+
+                let result = await response.json();
+
+                if (result.success) {
+                    alert('Form berhasil dikirim!');
+                } else {
+                    // Menampilkan pesan kesalahan dari server
+                    document.getElementById('nameError').textContent = result.errors.name || '';
+                    document.getElementById('emailError').textContent = result.errors.email || '';
+                    document.getElementById('passwordError').textContent = result.errors.password || '';
+                }
+            } catch (error) {
+                console.error('Terjadi kesalahan:', error);
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
